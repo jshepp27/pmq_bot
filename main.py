@@ -24,13 +24,24 @@ answers = []
 welcome_interaction = KeyboardButton("I'm felling good 👍")
 welcome_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True).add(welcome_interaction)
 
+import json
+file = "data/pmqs_parsed_2022-12-07.jsonl"
+pmqs_ = (json.loads(_) for _ in open(file))
+
 @dp.message_handler(commands=['start'])
 async def welcome(message: types.Message):
     await message.answer('Hello you rascal! ', reply_markup=welcome_kb)
 
 @dp.message_handler(commands=['help'])
 async def help(message: types.Message):
-    await message.answer('We are a team of knowledge miners, here to help make it super easy to understand the world!')
+    pmq = next(pmqs_)
+    question = pmq["question"]["member"]
+    if len(question) > 1:
+        q1 = question[0]
+        q2 = question[1]
+    else:
+        q1 = question[-1]
+    await message.answer(q1)
 
 if __name__ == "__main__":
     logger.info(">>> Running pmq-bot ... ")
