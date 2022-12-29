@@ -89,23 +89,27 @@ async def first(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
     responses = pmqs[count]["response"]["member"]
 
     member = pmqs[count]["member"]["title"]
-    img = pmqs[count]["member"]["img_url"]
+    party = pmqs[count]["member"]["party"]
+    id_ = pmqs[count]["member"]["id"]
 
-    #caption = f"<b>fuck you</b>"
-    #await update.callback_query.message.reply_photo(photo=img, caption=caption, parse_mode="html")
+    member_thumb = f"./data/thumbnails/{id_}.png"
+    pm_thumb = f"./data/thumbnails/{4483}.png"
+
     for _ in range(0, len(questions)):
-        insert = f"<a>{img}</a>"
-        await update.callback_query.message.reply_text(text=insert, parse_mode="html")
-
-        #await update.callback_query.message.reply_text(f"*Member: * {member}\n\n{questions[_]}", parse_mode="Markdown")
-        time.sleep(1)
+        await update.callback_query.message.reply_photo(photo=member_thumb,
+                                                        caption=f"*Member: * {member}\n\n{questions[_]}", parse_mode="Markdown")
+        time.sleep(2)
 
         if _ < len(questions) - 1:
-            await update.callback_query.message.reply_text(f"*Prime Minister: *\n\n{responses[_]}", parse_mode="Markdown")
-            time.sleep(1)
+            await update.callback_query.message.reply_photo(photo=pm_thumb,
+                                                            caption=f"*Prime Minister: * Rt Hon Rishi Sunak MP\n\n{responses[_]}",
+                                                            parse_mode="Markdown")
+            time.sleep(2)
 
         else:
-            await update.callback_query.message.reply_text(f"*Prime Minister: *\n\n{responses[_]}", reply_markup=reply_markup, parse_mode="Markdown")
+            await update.callback_query.message.reply_photo(photo=pm_thumb,
+                                                            caption=f"*Prime Minister: * Rt Hon Rishi Sunak MP\n\n{responses[_]}", reply_markup=reply_markup,
+                                                            parse_mode="Markdown")
 
     return NEXT
 
@@ -130,6 +134,7 @@ async def next(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
         pmqs = context.user_data["pmqs"]
 
         member = pmqs[count]["member"]["title"]
+        id_ = pmqs[count]["member"]["id"]
         img = pmqs[count]["member"]["img_url"]
 
         if member.startswith("Rt Hon Keir Starmer"):
@@ -140,22 +145,31 @@ async def next(update: Update, context: ContextTypes.DEFAULT_TYPE) -> str:
             questions = pmqs[count]["question"]["member"]
             responses = pmqs[count]["response"]["member"]
 
-        await update.callback_query.message.reply_photo(photo=img)
+        member_thumb = f"./data/thumbnails/{id_}.png"
+        pm_thumb = f"./data/thumbnails/{4483}.png"
 
         for _ in range(0, len(questions)):
-            await update.callback_query.message.reply_text(f"*Member: * {member}\n\n{questions[_]}", parse_mode="Markdown")
-            time.sleep(1)
+            await update.callback_query.message.reply_photo(photo=member_thumb,
+                                                            caption=f"*Member: * {member}\n\n{questions[_]}",
+                                                            parse_mode="Markdown")
+            time.sleep(2)
 
             if _ < len(questions) - 1:
-                await update.callback_query.message.reply_text(f"*Prime Minister: *\n\n{responses[_]}", parse_mode="Markdown")
-                time.sleep(1)
+                await update.callback_query.message.reply_photo(photo=pm_thumb,
+                                                                caption=f"*Prime Minister: * Rt Hon Rishi Sunak MP\n\n{responses[_]}",
+                                                                parse_mode="Markdown")
+                time.sleep(2)
 
             else:
-                if count < len(pmqs) - 1:
-                    await update.callback_query.message.reply_text(f"*Prime Minister: *\n\n{responses[_]}", reply_markup=reply_markup, parse_mode="Markdown")
-
+                if count < len(pmqs):
+                    await update.callback_query.message.reply_photo(photo=pm_thumb,
+                                                                    caption=f"*Prime Minister: * Rt Hon Rishi Sunak MP\n\n{responses[_]}",
+                                                                    reply_markup=reply_markup,
+                                                                    parse_mode="Markdown")
                 else:
-                    await update.callback_query.message.reply_text(f"*Prime Minister: *\n\n{responses[_]}", parse_mode="Markdown")
+                    await update.callback_query.message.reply_photo(photo=pm_thumb,
+                                                                    caption=f"*Prime Minister: * Rt Hon Rishi Sunak MP\n\n{responses[_]}",
+                                                                    parse_mode="Markdown")
 
         return NEXT
 
